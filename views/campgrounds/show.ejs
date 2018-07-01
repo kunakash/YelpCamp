@@ -28,20 +28,67 @@
             </div>
             <div class="well">
                 <div class="text-right">
-                    <a class="btn btn-success" href="/campgrounds/<%= campground._id %>/comments/new">Leave a Review</a>
+                    <a class="btn btn-success pull-right" role="button" data-toggle="collapse" href="#collapseComment" aria-expanded="false" aria-controls="collapseComment">
+                        <span class="glyphicon glyphicon-edit" aria-hidden="true"></span>Leave a Review
+                    </a>
+                </div>
+                <h4><strong>Comments</strong></h4>
+                <div class="collapse" id="collapseComment">
+                    <div class="well" style="border-left: 5px solid #00c851;">
+                        <% if(user){ %>
+                            <h4>Write your review <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
+                            <form id="add-comment-form" action="/campgrounds/<%= campground._id %>/comments" method="POST">
+                                <div class="form=group">
+                                    <input class="form-control" type="text" disabled-value="<%= user.username %>">
+                                </div>
+                                <div class="form-group">
+                                    <textarea class="form-control" name="comment[text]" placeholder="Your observations and feedback ..." form="add-comment-form" rows="5" cols="70"></textarea>
+                                </div>
+                                <div class="form-group">
+                                    <button class="btn btn-success">Submit</button>
+                                </div>
+                            </form>
+                        <% } %>
+                    </div>
                 </div>
                 <hr>
+                <% if(campground.comments.length === 0){ %>
+                    <em style="color: grey;">Be the first to leave a review for this campground</em>
+                <% } %>
                 <% campground.comments.forEach(function(comment){ %>
                     <div class="row">
                         <div class="col-md-12">
-                            <strong><%= comment.author.username %></strong>
+                            <strong>
+                                <% if(user %% comment.author.id.equals(user._id)){ %>
+                                    <span style="color: blue;" class="glyphicon glyphicon-star" aria-hidden="true"></span>
+                                <% } %>
+                                <%= comment.author.username %>
+                            </strong>
                             <span class="pull-right"><%= moment(comment.createdAt).fromNow() %></span>
                             <p><%= comment.text %></p>
                             <% if(user && comment.author.id.equals(user._id)){ %>
-                                <a class="btn btn-xs btn-link" href="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>/edit">Edit</a>
+                                <a class="btn btn-xs btn-link" role="button" data-toggle="collapse" href="#collapseEdit<%= comment._id %>" aria-expanded="false" aria-controls="collapse<%= comment._id %>">
+                                    Edit
+                                </a>
                                 <form class="delete-form" action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=DELETE" method="POST">
                                     <button class="btn btn-xs btn-link">Delete</button>
                                 </form>
+                                <div class="collapse" id="collapseEdit<%= comment._id %>">
+                                    <div class="well" style="border-left: 5px solid #ffbb33; margin-top: 15px;">
+                                        <h4>Edit your review <span class="glyphicon glyphicon glyphicon-pencil" aria-hidden="true"></span></h4>
+                                        <form id="edit-comment-form<%= comment._id %>" action="/campgrounds/<%= campground._id %>/comments/<%= comment._id %>?_method=PUT" method="POST">
+                                            <div class="form-group">
+                                                <input type="text" class="form-control" disabled-value="<%= user.username %>">
+                                            </div>
+                                            <div class="form-group">
+                                                <textarea class="form-control" name="comment[text]" form="edit-comment-form<%= comment._id %>" rows="5" cols="70"><%= comment.text %></textarea>
+                                            </div>
+                                            <div class="form-group">
+                                                <button class="btn btn-warning">Edit Review</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
                             <% } %>
                         </div>
                     </div>
