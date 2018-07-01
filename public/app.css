@@ -1,0 +1,28 @@
+body {
+    font-family: 'Lato', sans-serif;
+}
+
+.thumbnail img {
+    width: 100%;
+}
+
+.thumbnail {
+    padding: 0;
+}
+
+.thumbnail .caption-full {
+    padding: 9px;
+}
+
+.delete-form {
+    display: inline;
+}
+
+.form-div {
+    width: 30%;
+    margin: 25px auto;
+}
+
+.form-h1 {
+    text-align: center;
+}
