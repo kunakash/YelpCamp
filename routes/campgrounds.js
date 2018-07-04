@@ -7,13 +7,13 @@ router.get("/", function (req, res) {
     var perPage = 8;
     var pageQuery = parseInt(req.query.page);
     var pageNumber = pageQuery ? pageQuery : 1;
-    Campground.find({}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCampgrounds) {
+    Campground.find({}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, campgrounds) {
         Campground.count().exec(function (err, count) {
             if (err) {
                 console.log(err);
             } else {
                 res.render("campgrounds/index", {
-                    campgrounds: allCampgrounds,
+                    campgrounds: campgrounds,
                     current: pageNumber,
                     pages: Math.ceil(count / perPage),
                     page: "campgrounds"
