@@ -8,7 +8,7 @@ router.get('/', function(req, res){
 });
 
 router.get("/register", function(req, res){
-    res.render("users/register");
+    res.render("users/register", {page: "register"});
 });
 
 router.post("/register", function(req, res){
@@ -24,7 +24,7 @@ router.post("/register", function(req, res){
 });
 
 router.get("/login", function(req, res){
-    res.render("users/login");
+    res.render("users/login", {page: "login"});
 });
 
 router.post("/login", passport.authenticate("local", {
@@ -37,12 +37,5 @@ router.get("/logout", function(req, res){
     req.flash("success", "You have successfully logged out.");
     res.redirect("/campgrounds");
 });
-
-function isLoggedIn(req, res, next){
-    if(req.isAuthenticated()){
-        return next();
-    }
-    res.redirect("/login");
-}
 
 module.exports = router;
