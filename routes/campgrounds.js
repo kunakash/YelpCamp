@@ -12,7 +12,7 @@ router.get("/", function (req, res) {
             if (err) {
                 console.log(err);
             } else {
-                res.render("campgrounds/index", {
+                res.render("campgrounds/campgrounds", {
                     campgrounds: campgrounds,
                     current: pageNumber,
                     pages: Math.ceil(count / perPage),
