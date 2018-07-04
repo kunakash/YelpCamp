@@ -3,15 +3,24 @@ var express = require("express"),
     Campground = require("../models/campground"),
     middleware = require("../middleware");
 
-router.get('/', function(req, res){
-    Campground.find({}, function(err, campgrounds){
-       if(err){
-           console.log(err);
-       } else {
-           res.render("campgrounds/campgrounds", {campgrounds: campgrounds, page: "campgrounds"});
-       }
+router.get("/", function (req, res) {
+    var perPage = 8;
+    var pageQuery = parseInt(req.query.page);
+    var pageNumber = pageQuery ? pageQuery : 1;
+    Campground.find({}).skip((perPage * pageNumber) - perPage).limit(perPage).exec(function (err, allCampgrounds) {
+        Campground.count().exec(function (err, count) {
+            if (err) {
+                console.log(err);
+            } else {
+                res.render("campgrounds/index", {
+                    campgrounds: allCampgrounds,
+                    current: pageNumber,
+                    pages: Math.ceil(count / perPage),
+                    page: "campgrounds"
+                });
+            }
+        });
     });
-
 });
 
 router.post('/', middleware.isLoggedIn, function(req, res){
